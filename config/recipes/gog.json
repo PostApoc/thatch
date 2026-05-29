@@ -1,0 +1,23 @@
+{
+  "display_name": "Grim Dawn (GOG)",
+  "required_verbs": [
+    "vcrun2022",
+    "d3dx9",
+    "d3dx10",
+    "d3dcompiler_43",
+    "d3dcompiler_47",
+    "physx",
+    "dxvk",
+    "msxml6",
+    "wmp11",
+    "allcodecs"
+  ],
+  "recommended_runner": "Wine del Sistema (/usr/bin/wine)",
+  "performance_env": {
+    "WINEESYNC": "1",
+    "WINEMFSYNC": "1",
+    "PROTON_ENABLE_NVAPI": "1",
+    "__GL_SHADER_DISK_CACHE": "1"
+  },
+  "description": "Receta de alto rendimiento para Grim Dawn (GOG) alineada con Bottles. Inyecta DXVK (Vulkan), MSVC 2022, componentes DirectX9/10, compiladores D3D, soporte Nvidia PhysX y MSXML6 para una fluidez absoluta sin tirones."
+}

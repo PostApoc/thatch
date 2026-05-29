@@ -1,0 +1,10 @@
+{
+  "display_name": "Juego Genérico (Estándar)",
+  "required_verbs": [],
+  "recommended_runner": "wine-cachyos",
+  "performance_env": {
+    "WINEESYNC": "1",
+    "WINEMFSYNC": "1"
+  },
+  "description": "Configuración estándar optimizada con sincronización a nivel de Kernel Zen para juegos genéricos."
+}
