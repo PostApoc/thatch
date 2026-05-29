@@ -67,6 +67,11 @@ class UnifiedSidebar(QFrame):
         self.btn_prefs.clicked.connect(lambda: self._on_btn_clicked("preferences"))
         self.btn_group.addButton(self.btn_prefs)
         layout.addWidget(self.btn_prefs)
+        
+        # 6. Version indicator (Sleek minimalist footer)
+        self.lbl_version = QLabel("v1.0.0")
+        self.lbl_version.setStyleSheet("color: #48484a; font-size: 10px; font-weight: bold; margin-left: 16px; margin-top: 8px;")
+        layout.addWidget(self.lbl_version)
 
     @Slot(str)
     def _on_btn_clicked(self, view_name: str) -> None:

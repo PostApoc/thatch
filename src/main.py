@@ -24,6 +24,9 @@ from views import (UnifiedSidebar, ChestsView, ChestDetailsView,
                    ToastNotification, ZeusInstallerDialog)
 
 
+__version__ = "1.0.0"
+
+
 # ─── MODULAR SUPPORT DIALOG: LIVE WINETRICKS CONSOLE ───────────────────────────
 
 class WinetricksConsoleDialog(QDialog):
@@ -63,7 +66,7 @@ class ThatchLauncher(QMainWindow):
     """
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("🏴‍☠️ Thatch - Native Wine Commander")
+        self.setWindowTitle(f"🏴‍☠️ Thatch - Native Wine Commander v{__version__}")
         self.resize(1000, 680)
         
         # Initialize databases
