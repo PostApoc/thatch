@@ -1,0 +1,17 @@
+# Thatch - Wine Prefix & Runner Commander
+
+## Technology Stack
+- **Language**: Python 3
+- **GUI Framework**: PySide6 / PyQt6 (Qt for Python)
+- **Database**: SQLite (via standard sqlite3 library)
+- **Environment**: Wine, Proton, Linux (CachyOS/Arch Linux)
+
+## Development Standards
+- Maintain clean, modular PEP 8 Python style.
+- Use explicit typing where appropriate to maximize autocomplete and type checking.
+- Separate GUI layout logic, hardware probing, and database queries cleanly.
+- Ensure Wine prefix operations are executed safely with appropriate environment variables (`WINEPREFIX`, `WINEARCH`).
+
+## Database Rules
+- Keep SQLite transactions fast, atomic, and safe.
+- Always close database connections or use context managers.
