@@ -423,3 +423,16 @@ class ThatchDB:
             
         conn.commit()
         conn.close()
+
+
+def get_setting(key: str, default: str = "") -> str:
+    """Reads a setting value from the global_config table in the default database."""
+    db = ThatchDB()
+    return db._get_config_val(key, default)
+
+
+def set_setting(key: str, value: str) -> None:
+    """Saves or updates a setting value in the global_config table."""
+    db = ThatchDB()
+    db._set_config_val(key, value)
+

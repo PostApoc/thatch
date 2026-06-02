@@ -91,3 +91,12 @@ class UnifiedSidebar(QFrame):
         elif view_name == "preferences":
             self.btn_prefs.setChecked(True)
         self.btn_group.blockSignals(False)
+
+    def retranslate(self) -> None:
+        """Cascades translation updates to all sidebar elements."""
+        self.lbl_title.setText(_("sidebar_title"))
+        self.btn_chests.setText(_("sidebar_chests"))
+        self.btn_cargo.setText(_("sidebar_cargo"))
+        self.btn_runners.setText(_("sidebar_runners"))
+        self.btn_prefs.setText(_("sidebar_preferences"))
+

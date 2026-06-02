@@ -176,6 +176,7 @@ class ThatchLauncher(QMainWindow):
         self.preferences_view = PreferencesView(self.db, self._get_runners_list(), self)
         self.preferences_view.toast_requested.connect(self._on_toast_requested)
         self.preferences_view.update_catalog_requested.connect(self._on_update_catalog_requested)
+        self.preferences_view.combo_language.currentIndexChanged.connect(self.on_language_changed)
         self.view_stack.addWidget(self.preferences_view)
         
         # View 4: Wine Runners View
@@ -1872,6 +1873,31 @@ class ThatchLauncher(QMainWindow):
         self.toast.show_message(f"¡Instalación de '{game_name}' completada y lanzador directo de Wine creado!")
 
 
+    def on_language_changed(self, index: int) -> None:
+        selected_lang = self.preferences_view.combo_language.itemData(index)
+        if not selected_lang:
+            return
+        from i18n import set_active_lang
+        set_active_lang(selected_lang)
+        self.retranslate()
+
+    def retranslate(self) -> None:
+        """Cascades translation updates throughout the application's visual interface."""
+        self.setWindowTitle(f"🏴‍☠️ Thatch - {_('app_title')} v{__version__}")
+        
+        # Retranslate system tray menu items if tray exists
+        if self.tray_icon and self.tray_icon.contextMenu():
+            menu = self.tray_icon.contextMenu()
+            actions = menu.actions()
+            if len(actions) >= 2:
+                actions[0].setText("Show Thatch" if ACTIVE_LANG == "en" else "Mostrar Thatch")
+                actions[1].setText("Exit" if ACTIVE_LANG == "en" else "Salir")
+                
+        # Retranslate widgets
+        self.sidebar.retranslate()
+        self.preferences_view.retranslate()
+        self.refresh_data()
+
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)
         # Re-adjust toast overlay position on window resize
@@ -1880,6 +1906,8 @@ class ThatchLauncher(QMainWindow):
 
 
 if __name__ == "__main__":
+    from i18n import load_lang_from_db
+    load_lang_from_db()
     app = QApplication(sys.argv)
     apply_theme(app)
     gui = ThatchLauncher()

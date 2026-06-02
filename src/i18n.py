@@ -15,6 +15,32 @@ try:
 except Exception:
     pass
 
+
+def set_active_lang(lang: str) -> None:
+    """Changes the active language at runtime and persists it to DB."""
+    global ACTIVE_LANG
+    if lang not in ("en", "es"):
+        return
+    ACTIVE_LANG = lang
+    try:
+        from database import set_setting
+        set_setting("app_language", lang)
+    except Exception:
+        pass
+
+
+def load_lang_from_db() -> None:
+    """Reads persisted language preference from DB and activates it."""
+    global ACTIVE_LANG
+    try:
+        from database import get_setting
+        saved = get_setting("app_language", "")
+        if saved in ("en", "es"):
+            ACTIVE_LANG = saved
+    except Exception:
+        pass
+
+
 def load_locale(lang):
     """Loads a specific locale JSON into the STRINGS cache."""
     if lang in STRINGS:

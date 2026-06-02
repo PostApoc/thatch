@@ -30,5 +30,8 @@
   "toast_catalog_updated": "¡Catalog updated ({count} components)!",
   "toast_catalog_failed": "Error updating Winetricks catalog.",
   "win_system_wine": "System Wine (/usr/bin/wine)",
-  "win_specs": "Thatch Version: 1.0.0 (Native Core)\nWine Engine Compatibility: Proton / Soda / System Wine\nWinetricks Client Version: Latest (Auto-updates via WINEPREFIX)"
+  "win_specs": "Thatch Version: 1.0.0 (Native Core)\nWine Engine Compatibility: Proton / Soda / System Wine\nWinetricks Client Version: Latest (Auto-updates via WINEPREFIX)",
+  "lbl_app_language": "Language:",
+  "opt_english": "English",
+  "opt_spanish": "Spanish"
 }
