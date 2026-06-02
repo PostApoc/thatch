@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel, QPushButton, QButtonGroup, QWidget
 from PySide6.QtCore import Signal, Qt, Slot
+from i18n import _
 
 class UnifiedSidebar(QFrame):
     """
@@ -19,7 +20,7 @@ class UnifiedSidebar(QFrame):
         layout.setSpacing(8)
         
         # 1. Header Title
-        self.lbl_title = QLabel("Thatch")
+        self.lbl_title = QLabel(_("sidebar_title"))
         self.lbl_title.setObjectName("SidebarTitle")
         self.lbl_title.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         layout.addWidget(self.lbl_title)
@@ -29,7 +30,7 @@ class UnifiedSidebar(QFrame):
         self.btn_group.setExclusive(True)
         
         # 2. Chests Navigation Button
-        self.btn_chests = QPushButton("🏴‍☠️  Chests")
+        self.btn_chests = QPushButton(_("sidebar_chests"))
         self.btn_chests.setObjectName("SidebarBtn")
         self.btn_chests.setCheckable(True)
         self.btn_chests.setChecked(True)
@@ -39,7 +40,7 @@ class UnifiedSidebar(QFrame):
         layout.addWidget(self.btn_chests)
         
         # 3. Cargo Navigation Button
-        self.btn_cargo = QPushButton("🗺️  Mapas")
+        self.btn_cargo = QPushButton(_("sidebar_cargo"))
         self.btn_cargo.setObjectName("SidebarBtn")
         self.btn_cargo.setCheckable(True)
         self.btn_cargo.setCursor(Qt.PointingHandCursor)
@@ -48,7 +49,7 @@ class UnifiedSidebar(QFrame):
         layout.addWidget(self.btn_cargo)
         
         # 4. Wine Runners Navigation Button
-        self.btn_runners = QPushButton("🍷  Wine Runners")
+        self.btn_runners = QPushButton(_("sidebar_runners"))
         self.btn_runners.setObjectName("SidebarBtn")
         self.btn_runners.setCheckable(True)
         self.btn_runners.setCursor(Qt.PointingHandCursor)
@@ -60,7 +61,7 @@ class UnifiedSidebar(QFrame):
         layout.addStretch(1)
         
         # 5. Preferences Button (bottom)
-        self.btn_prefs = QPushButton("⚙️  Preferences")
+        self.btn_prefs = QPushButton(_("sidebar_preferences"))
         self.btn_prefs.setObjectName("SidebarBtn")
         self.btn_prefs.setCheckable(True)
         self.btn_prefs.setCursor(Qt.PointingHandCursor)

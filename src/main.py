@@ -22,6 +22,7 @@ from style import apply_theme
 from views import (UnifiedSidebar, ChestsView, ChestDetailsView, 
                    MapasView, PreferencesView, WineRunnersView, CreateChestWizard, 
                    ToastNotification, ZeusInstallerDialog)
+from i18n import _, ACTIVE_LANG
 
 
 __version__ = "1.0.0"
@@ -66,7 +67,7 @@ class ThatchLauncher(QMainWindow):
     """
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle(f"🏴‍☠️ Thatch - Native Wine Commander v{__version__}")
+        self.setWindowTitle(f"🏴‍☠️ Thatch - {_('app_title')} v{__version__}")
         self.resize(1000, 680)
         
         # Initialize databases
@@ -100,9 +101,12 @@ class ThatchLauncher(QMainWindow):
             self.tray_icon.setIcon(QIcon(pixmap))
             
             tray_menu = QMenu()
-            show_action = QAction("Mostrar Thatch", self)
+            show_title = "Show Thatch" if ACTIVE_LANG == "en" else "Mostrar Thatch"
+            quit_title = "Exit" if ACTIVE_LANG == "en" else "Salir"
+            
+            show_action = QAction(show_title, self)
             show_action.triggered.connect(self.showNormal)
-            quit_action = QAction("Salir", self)
+            quit_action = QAction(quit_title, self)
             quit_action.triggered.connect(QApplication.quit)
             
             tray_menu.addAction(show_action)
@@ -242,18 +246,18 @@ class ThatchLauncher(QMainWindow):
             import subprocess
             if not shutil.which("winetricks"):
                 if not silent:
-                    self.toast.show_message("Error: 'winetricks' no está instalado en el sistema.")
+                    self.toast.show_message("Error: 'winetricks' is not installed." if ACTIVE_LANG == "en" else "Error: 'winetricks' no está instalado en el sistema.")
                 return
-
+ 
             category_commands = [
                 ("Libraries", ["winetricks", "dlls", "list"]),
                 ("Fonts",     ["winetricks", "fonts", "list"]),
                 ("Settings",  ["winetricks", "settings", "list"]),
             ]
-
+ 
             full_catalog = []
             seen = set()
-
+ 
             for cat_name, cmd in category_commands:
                 try:
                     result = subprocess.run(
@@ -280,27 +284,27 @@ class ThatchLauncher(QMainWindow):
                         full_catalog.append({"verb": verb, "name": e_name, "desc": e_desc, "type": cat_name})
                 except Exception as e:
                     print(f"[WinetricksCatalog BG] Failed to load {cat_name}: {e}")
-
+ 
             if full_catalog:
                 try:
                     self.db.save_winetricks_catalog(full_catalog)
                     self._winetricks_catalog = full_catalog
                     print(f"[WinetricksCatalog BG] Successfully cached {len(full_catalog)} verbs to SQLite.")
                     if not silent:
-                        self.toast.show_message(f"¡Catálogo actualizado ({len(full_catalog)} componentes)!")
+                        self.toast.show_message(_("toast_catalog_updated", count=len(full_catalog)))
                         self.refresh_data()
                 except Exception as e:
                     print(f"[WinetricksCatalog BG] Failed to cache catalog to SQLite: {e}")
             else:
                 if not silent:
-                    self.toast.show_message("Error al obtener catálogo de winetricks.")
-
+                    self.toast.show_message(_("toast_catalog_failed"))
+ 
         threading.Thread(target=bg_loader, daemon=True).start()
-
+ 
     @Slot()
     def _on_update_catalog_requested(self) -> None:
         """Invoked when the user manually requests a winetricks catalog update in Preferences."""
-        self.toast.show_message("🔄 Escaneando y actualizando catálogo de Winetricks...")
+        self.toast.show_message(_("toast_catalog_updating"))
         self._trigger_winetricks_catalog_refresh(silent=False)
 
     def _get_runners_list(self) -> list[str]:

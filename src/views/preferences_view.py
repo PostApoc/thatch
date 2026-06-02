@@ -6,6 +6,7 @@ from pathlib import Path
 import math
 import shutil
 from database import ThatchDB
+from i18n import _
 
 class PreferencesView(QWidget):
     """
@@ -26,7 +27,7 @@ class PreferencesView(QWidget):
         layout.setSpacing(20)
         
         # 1. Header Title
-        lbl_title = QLabel("Preferences")
+        lbl_title = QLabel(_("pref_title"))
         lbl_title.setObjectName("ViewTitle")
         layout.addWidget(lbl_title)
         
@@ -47,7 +48,7 @@ class PreferencesView(QWidget):
         prefs_layout = QVBoxLayout(card_prefs)
         prefs_layout.setSpacing(16)
         
-        lbl_card_title = QLabel("Application Settings & Paths")
+        lbl_card_title = QLabel(_("pref_card_title"))
         lbl_card_title.setObjectName("CardTitle")
         prefs_layout.addWidget(lbl_card_title)
         
@@ -56,7 +57,7 @@ class PreferencesView(QWidget):
         grid.setSpacing(14)
         
         # Row 0: Default Runner
-        lbl_runner = QLabel("Default Runner:")
+        lbl_runner = QLabel(_("lbl_default_runner"))
         lbl_runner.setObjectName("CardLabel")
         self.combo_runner = QComboBox()
         self._populate_runners_combo()
@@ -65,18 +66,18 @@ class PreferencesView(QWidget):
         grid.addWidget(self.combo_runner, 0, 1, 1, 2)  # Span columns to match browse buttons
         
         # Row 1: Launch Action
-        lbl_launch = QLabel("Launch Action:")
+        lbl_launch = QLabel(_("lbl_launch_action"))
         lbl_launch.setObjectName("CardLabel")
         self.combo_launch = QComboBox()
-        self.combo_launch.addItem("Close Thatch on Launch", "extreme")
-        self.combo_launch.addItem("Minimize to System Tray", "stealth")
-        self.combo_launch.addItem("Keep Thatch open in background", "keep")
+        self.combo_launch.addItem(_("launch_close"), "extreme")
+        self.combo_launch.addItem(_("launch_minimize"), "stealth")
+        self.combo_launch.addItem(_("launch_keep"), "keep")
         self.combo_launch.currentTextChanged.connect(self._save_launch_mode)
         grid.addWidget(lbl_launch, 1, 0)
         grid.addWidget(self.combo_launch, 1, 1, 1, 2)
         
         # Row 2: Default Terminal
-        lbl_term = QLabel("Default Terminal:")
+        lbl_term = QLabel(_("lbl_default_terminal"))
         lbl_term.setObjectName("CardLabel")
         self.combo_term = QComboBox()
         self.installed_terminals = self._scan_installed_terminals()
@@ -86,11 +87,11 @@ class PreferencesView(QWidget):
         grid.addWidget(self.combo_term, 2, 1, 1, 2)
         
         # Row 3: Chests Path
-        lbl_path_pref = QLabel("Chests Path:")
+        lbl_path_pref = QLabel(_("lbl_chests_path"))
         lbl_path_pref.setObjectName("CardLabel")
         self.txt_path_pref = QLineEdit(str(self.db.get_prefixes_dir()))
         self.txt_path_pref.setReadOnly(True)
-        btn_path_pref = QPushButton("Browse")
+        btn_path_pref = QPushButton(_("btn_browse"))
         btn_path_pref.setCursor(Qt.PointingHandCursor)
         btn_path_pref.clicked.connect(self._browse_prefixes)
         grid.addWidget(lbl_path_pref, 3, 0)
@@ -98,11 +99,11 @@ class PreferencesView(QWidget):
         grid.addWidget(btn_path_pref, 3, 2)
         
         # Row 4: Runners Path
-        lbl_path_run = QLabel("Runners Path:")
+        lbl_path_run = QLabel(_("lbl_runners_path"))
         lbl_path_run.setObjectName("CardLabel")
         self.txt_path_run = QLineEdit(str(self.db.get_runners_dir()))
         self.txt_path_run.setReadOnly(True)
-        btn_path_run = QPushButton("Browse")
+        btn_path_run = QPushButton(_("btn_browse"))
         btn_path_run.setCursor(Qt.PointingHandCursor)
         btn_path_run.clicked.connect(self._browse_runners)
         grid.addWidget(lbl_path_run, 4, 0)
@@ -110,11 +111,11 @@ class PreferencesView(QWidget):
         grid.addWidget(btn_path_run, 4, 2)
         
         # Row 5: Winetricks Cache Path
-        lbl_path_cache = QLabel("Winetricks Cache:")
+        lbl_path_cache = QLabel(_("lbl_winetricks_cache"))
         lbl_path_cache.setObjectName("CardLabel")
         self.txt_path_cache = QLineEdit(str(self.db.get_winetricks_cache_dir()))
         self.txt_path_cache.setReadOnly(True)
-        btn_path_cache = QPushButton("Browse")
+        btn_path_cache = QPushButton(_("btn_browse"))
         btn_path_cache.setCursor(Qt.PointingHandCursor)
         btn_path_cache.clicked.connect(self._browse_cache)
         grid.addWidget(lbl_path_cache, 5, 0)
@@ -129,17 +130,17 @@ class PreferencesView(QWidget):
         cache_layout = QHBoxLayout(self.cache_mgr_frame)
         cache_layout.setContentsMargins(12, 8, 12, 8)
         
-        lbl_cache_title = QLabel("Winetricks Cache size:")
+        lbl_cache_title = QLabel(_("lbl_winetricks_cache_size"))
         lbl_cache_title.setStyleSheet("color: #ffffff; font-size: 12px; font-weight: bold;")
-        self.lbl_cache_size = QLabel("Scanning size...")
+        self.lbl_cache_size = QLabel(_("lbl_scan_size"))
         self.lbl_cache_size.setStyleSheet("color: #8e8e93; font-size: 12px;")
         
-        self.btn_update_catalog = QPushButton("🔄 Actualizar Catálogo Winetricks")
+        self.btn_update_catalog = QPushButton(_("btn_update_catalog"))
         self.btn_update_catalog.setCursor(Qt.PointingHandCursor)
         self.btn_update_catalog.setStyleSheet("padding: 4px 10px; font-size: 11px; color: #ffffff; background-color: #2563eb; border: none; border-radius: 4px; margin-right: 8px;")
         self.btn_update_catalog.clicked.connect(self.update_catalog_requested.emit)
         
-        self.btn_clear_cache = QPushButton("Clear Cache")
+        self.btn_clear_cache = QPushButton(_("btn_clear_cache"))
         self.btn_clear_cache.setObjectName("RedBtnText")
         self.btn_clear_cache.setCursor(Qt.PointingHandCursor)
         self.btn_clear_cache.setStyleSheet("padding: 4px 10px; font-size: 11px;")
@@ -153,15 +154,11 @@ class PreferencesView(QWidget):
         prefs_layout.addWidget(self.cache_mgr_frame)
         
         # Static System Details
-        lbl_specs_title = QLabel("System Details")
+        lbl_specs_title = QLabel(_("lbl_system_details"))
         lbl_specs_title.setStyleSheet("color: #ffffff; font-size: 13px; font-weight: bold; margin-top: 10px;")
         prefs_layout.addWidget(lbl_specs_title)
         
-        lbl_specs = QLabel(
-            "Thatch Version: 1.0.0 (Native Core)\n"
-            "Wine Engine Compatibility: Proton / Soda / System Wine\n"
-            "Winetricks Client Version: Latest (Auto-updates via WINEPREFIX)"
-        )
+        lbl_specs = QLabel(_("win_specs"))
         lbl_specs.setStyleSheet("color: #71717a; font-size: 12px; line-height: 18px;")
         prefs_layout.addWidget(lbl_specs)
         
@@ -179,7 +176,7 @@ class PreferencesView(QWidget):
         self.combo_runner.clear()
         if self.runners:
             self.combo_runner.addItems(self.runners)
-        self.combo_runner.addItem("Wine del Sistema (/usr/bin/wine)")
+        self.combo_runner.addItem(_("win_system_wine"))
 
     def _load_config_vals(self) -> None:
         """Prefills UI components with active db values."""
@@ -192,7 +189,11 @@ class PreferencesView(QWidget):
         # Default runner
         default_runner = self.db.data["global_config"].get("default_runner", "")
         if default_runner:
-            idx_run = self.combo_runner.findText(default_runner)
+            # Fallback handling for "Wine del Sistema" matching win_system_wine key translation
+            if default_runner in ["Wine del Sistema (/usr/bin/wine)", "System Wine (/usr/bin/wine)"]:
+                idx_run = self.combo_runner.findText(_("win_system_wine"))
+            else:
+                idx_run = self.combo_runner.findText(default_runner)
             if idx_run != -1:
                 self.combo_runner.setCurrentIndex(idx_run)
 
@@ -250,12 +251,19 @@ class PreferencesView(QWidget):
     def _clear_winetricks_cache(self) -> None:
         cache_path = self.db.get_winetricks_cache_dir()
         if not cache_path.exists() or not any(cache_path.iterdir()):
-            QMessageBox.information(self, "Cache Empty", "Winetricks cache is already empty.")
+            title = "Cache Empty" if ACTIVE_LANG == "en" else "Caché Vacío"
+            msg = "Winetricks cache is already empty." if ACTIVE_LANG == "en" else "El caché de Winetricks ya está vacío."
+            QMessageBox.information(self, title, msg)
             return
             
+        title = "Clear Winetricks Cache" if ACTIVE_LANG == "en" else "Limpiar Caché de Winetricks"
+        msg = (
+            f"Are you sure you want to delete all cached files in {cache_path}?\nThis will remove installers that need to be re-downloaded next time you inject dependencies."
+            if ACTIVE_LANG == "en" else
+            f"¿Seguro que deseas eliminar todos los archivos en caché en {cache_path}?\nEsto borrará instaladores que se deberán descargar de nuevo cuando inyectes dependencias."
+        )
         confirm = QMessageBox.question(
-            self, "Clear Winetricks Cache",
-            f"Are you sure you want to delete all cached files in {cache_path}?\nThis will remove installers that need to be re-downloaded next time you inject dependencies.",
+            self, title, msg,
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
         
@@ -267,9 +275,10 @@ class PreferencesView(QWidget):
                     else:
                         item.unlink()
                 self._refresh_cache_size()
-                self.toast_requested.emit("Winetricks cache cleared successfully!")
+                self.toast_requested.emit(_("toast_cache_cleared"))
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to clear cache: {e}")
+                err_title = "Error"
+                QMessageBox.critical(self, err_title, f"Failed to clear cache: {e}")
 
     @Slot()
     def _save_default_runner(self) -> None:
@@ -283,25 +292,28 @@ class PreferencesView(QWidget):
 
     @Slot()
     def _browse_prefixes(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Select Chests Directory", self.txt_path_pref.text())
+        title = "Select Chests Directory" if ACTIVE_LANG == "en" else "Seleccionar Carpeta de Contenedores"
+        path = QFileDialog.getExistingDirectory(self, title, self.txt_path_pref.text())
         if path:
             self.txt_path_pref.setText(path)
             self.db.set_prefixes_dir(path)
-            self.toast_requested.emit("Chests directory updated successfully.")
+            self.toast_requested.emit(_("toast_prefix_updated"))
 
     @Slot()
     def _browse_runners(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Select Wine Runners Directory", self.txt_path_run.text())
+        title = "Select Wine Runners Directory" if ACTIVE_LANG == "en" else "Seleccionar Carpeta de Motores Wine"
+        path = QFileDialog.getExistingDirectory(self, title, self.txt_path_run.text())
         if path:
             self.txt_path_run.setText(path)
             self.db.set_runners_dir(path)
-            self.toast_requested.emit("Wine runners directory updated successfully.")
+            self.toast_requested.emit(_("toast_runners_updated"))
 
     @Slot()
     def _browse_cache(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Select Winetricks Cache Directory", self.txt_path_cache.text())
+        title = "Select Winetricks Cache Directory" if ACTIVE_LANG == "en" else "Seleccionar Carpeta de Caché Winetricks"
+        path = QFileDialog.getExistingDirectory(self, title, self.txt_path_cache.text())
         if path:
             self.txt_path_cache.setText(path)
             self.db.set_winetricks_cache_dir(path)
             self._refresh_cache_size()
-            self.toast_requested.emit("Winetricks cache directory updated successfully.")
+            self.toast_requested.emit(_("toast_cache_updated"))
