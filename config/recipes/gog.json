@@ -12,7 +12,7 @@
     "wmp11",
     "allcodecs"
   ],
-  "recommended_runner": "Wine del Sistema (/usr/bin/wine)",
+  "recommended_runner": "GE-Proton10-34",
   "performance_env": {
     "WINEESYNC": "1",
     "WINEMFSYNC": "1",
