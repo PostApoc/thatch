@@ -21,11 +21,11 @@ from style import apply_theme
 # Import modular views package
 from views import (UnifiedSidebar, ChestsView, ChestDetailsView, 
                    MapasView, PreferencesView, WineRunnersView, CreateChestWizard, 
-                   ToastNotification, ZeusInstallerDialog)
+                   ToastNotification, ZeusInstallerDialog, RecipesView)
 from i18n import _, ACTIVE_LANG
 
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 
 # ─── MODULAR SUPPORT DIALOG: LIVE WINETRICKS CONSOLE ───────────────────────────
@@ -170,6 +170,7 @@ class ThatchLauncher(QMainWindow):
         # View 2: Cargo View (Mapas)
         self.cargo_view = MapasView(self)
         self.cargo_view.install_requested.connect(self._on_cargo_install_requested)
+        self.cargo_view.map_deleted.connect(self.refresh_data)
         self.view_stack.addWidget(self.cargo_view)
         
         # View 3: Preferences View
@@ -184,6 +185,11 @@ class ThatchLauncher(QMainWindow):
         self.wine_runners_view.runner_downloaded.connect(self._on_runner_downloaded)
         self.wine_runners_view.toast_requested.connect(self._on_toast_requested)
         self.view_stack.addWidget(self.wine_runners_view)
+
+        # View 5: Recipes View
+        recipes_dir = Path("config/recipes")
+        self.recipes_view = RecipesView(recipes_dir, self)
+        self.view_stack.addWidget(self.recipes_view)
         
         # 3. Toast Notifications Overlay
         self.toast = ToastNotification(self)
@@ -504,6 +510,7 @@ class ThatchLauncher(QMainWindow):
         env = compile_performance_env(self.active_gpu, recipe_env)
         env["WINEPREFIX"] = str(self.db.get_prefixes_dir() / prefix_name)
         env["WINETRICKS_CACHE"] = str(self.db.get_winetricks_cache_dir())
+        env["WINETRICKS_DOWNLOADER"] = "curl"
         
         selected_runner = runner_override if runner_override else (self.db.data["global_config"].get("default_runner", "") or "Wine del Sistema (/usr/bin/wine)")
         runners_dir = self.db.get_runners_dir()
@@ -533,6 +540,8 @@ class ThatchLauncher(QMainWindow):
             self.view_stack.setCurrentIndex(2)
         elif view_name == "runners":
             self.view_stack.setCurrentIndex(4)
+        elif view_name == "recipes":
+            self.view_stack.setCurrentIndex(5)
         elif view_name == "preferences":
             self.view_stack.setCurrentIndex(3)
 
@@ -1305,7 +1314,9 @@ class ThatchLauncher(QMainWindow):
         else:
             cmd = wrappers + [wine_cmd, relative_exe]
         
-        subprocess.Popen(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, preexec_fn=os.setpgrp, cwd=str(game_dir))
+        log_path = self.db.get_prefixes_dir() / prefix_name / "thatch_last_run.log"
+        log_file = open(log_path, "w")
+        subprocess.Popen(cmd, env=env, stdout=log_file, stderr=subprocess.STDOUT, preexec_fn=os.setpgrp, cwd=str(game_dir))
         self.toast.show_message(f"Iniciando {game_name}...")
         
         launch_mode = self.db.get_launch_mode()
@@ -1752,7 +1763,7 @@ class ThatchLauncher(QMainWindow):
         self.process.readyReadStandardError.connect(self._on_winetricks_stderr)
         self.process.finished.connect(self._on_winetricks_finished)
         
-        self.process.start("winetricks", ["-q", verb])
+        self.process.start("winetricks", ["-q", "--force", verb])
         if not self.console_dialog.isVisible():
             self.console_dialog.show()
 

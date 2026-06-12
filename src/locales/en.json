@@ -1,9 +1,10 @@
 {
   "app_title": "Thatch - Native Wine Commander",
   "sidebar_title": "Thatch",
-  "sidebar_chests": "🏴\u200D☠️  Chests",
-  "sidebar_cargo": "🗺️  Mapas",
-  "sidebar_runners": "🍷  Wine Runners",
+  "sidebar_chests": "🏴‍☠️  Chests",
+  "sidebar_cargo": "🗺️  Map Book",
+  "sidebar_recipes": "📜  Maps",
+  "sidebar_runners": "🍷  Wine Engines",
   "sidebar_preferences": "⚙️  Preferences",
   "pref_title": "Preferences",
   "pref_card_title": "Application Settings & Paths",
@@ -30,7 +31,7 @@
   "toast_catalog_updated": "¡Catalog updated ({count} components)!",
   "toast_catalog_failed": "Error updating Winetricks catalog.",
   "win_system_wine": "System Wine (/usr/bin/wine)",
-  "win_specs": "Thatch Version: 1.0.0 (Native Core)\nWine Engine Compatibility: Proton / Soda / System Wine\nWinetricks Client Version: Latest (Auto-updates via WINEPREFIX)",
+  "win_specs": "Thatch Version: 1.0.1 (Native Core)\nWine Engine Compatibility: Proton / Soda / System Wine\nWinetricks Client Version: Latest (Auto-updates via WINEPREFIX)",
   "lbl_app_language": "Language:",
   "opt_english": "English",
   "opt_spanish": "Spanish"

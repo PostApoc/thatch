@@ -37,8 +37,9 @@ class ZeusInstallerDialog(QDialog):
         # Setup.exe selector
         setup_lay = QHBoxLayout()
         self.lbl_setup = QLabel(prefilled_setup if prefilled_setup else "Sin seleccionar")
-        self.lbl_setup.setStyleSheet("font-family: monospace; font-size: 11px;")
+        self.lbl_setup.setStyleSheet("font-family: monospace; font-size: 11px; color: #a0a0a0;")
         btn_browse = QPushButton("Examinar")
+        btn_browse.setObjectName("BlueBtn")
         btn_browse.clicked.connect(self._browse_setup)
         setup_lay.addWidget(self.lbl_setup, stretch=3)
         setup_lay.addWidget(btn_browse, stretch=1)
@@ -92,7 +93,7 @@ class ZeusInstallerDialog(QDialog):
         
         # Submit Button
         self.btn_launch = QPushButton("Iniciar Instalador Zeus")
-        self.btn_launch.setStyleSheet("background-color: #0d5a2d; color: #00e676; border: 1px solid #00e676;")
+        self.btn_launch.setObjectName("OrangeBtn")
         self.btn_launch.clicked.connect(self._run_zeus_engine)
         self.layout.addRow(self.btn_launch)
 
@@ -204,7 +205,9 @@ class ZeusInstallerDialog(QDialog):
         self.process.readyReadStandardError.connect(self._on_stderr)
         self.process.finished.connect(self._on_finished)
         
-        self.process.start(wine_cmd, [setup_path])
+        wineserver_cmd = str(Path(wine_cmd).parent / "wineserver")
+        bash_command = f'"{wine_cmd}" "{setup_path}"; "{wineserver_cmd}" -w'
+        self.process.start("bash", ["-c", bash_command])
 
     @Slot()
     def _on_stdout(self) -> None:

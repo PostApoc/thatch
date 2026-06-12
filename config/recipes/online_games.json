@@ -1,0 +1,16 @@
+{
+  "display_name": "Juegos Online (DXVK/VKD3D)",
+  "required_verbs": [
+    "dxvk",
+    "vkd3d",
+    "corefonts"
+  ],
+  "recommended_runner": "wine-cachyos",
+  "performance_env": {
+    "WINEESYNC": "1",
+    "WINEMFSYNC": "1",
+    "PROTON_HIDE_NVIDIA_GPU": "0",
+    "PROTON_ENABLE_NVAPI": "1"
+  },
+  "description": "Receta optimizada para juegos como Path of Exile o Eve Online que requieren librerías de Vulkan (DXVK, VKD3D)."
+}

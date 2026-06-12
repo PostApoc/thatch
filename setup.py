@@ -60,7 +60,7 @@ class ThatchSetup:
         self.bin_dir.mkdir(parents=True, exist_ok=True)
 
         python_venv_path = self.venv_dir / "bin" / "python"
-        script_path = self.current_dir / "pirata.py" # Cambiar a pirata.py o thatch.py según tu archivo principal
+        script_path = self.current_dir / "thatch.py"
 
         # Contenido del wrapper de ejecución limpia
         launcher_content = f"""#!/usr/bin/env bash
@@ -79,14 +79,28 @@ class ThatchSetup:
             print(f"[-] No se pudo escribir el script lanzador: {e}")
 
     def run(self):
-        print("=== Iniciando Instalación de Thatch ===")
+        print("=== Iniciando Configuración de Thatch ===")
         self.check_system_dependencies()
         self.create_structure()
         self.create_venv()
-        self.create_global_link()
-        print("\n[+] Instalación completada de forma nativa.")
-        print("[!] Nota: Asegúrate de que '~/.local/bin' esté en tu $PATH.")
-        print("[*] Ya puedes ejecutar 'thatch' desde cualquier terminal.")
+        
+        print("\n[?] ¿Deseas crear un enlace global en tu sistema?")
+        print("    (Esto creará un comando 'thatch' en ~/.local/bin para ejecutarlo desde cualquier terminal)")
+        try:
+            resp = input("    Instalar globalmente [S/n]: ").strip().lower()
+        except EOFError:
+            resp = "s"
+            
+        if resp in ('', 's', 'si', 'y', 'yes'):
+            self.create_global_link()
+            print("\n[+] Instalación completada.")
+            print("[!] Nota: Asegúrate de que '~/.local/bin' esté en tu $PATH.")
+            print("[*] Ya puedes ejecutar 'thatch' desde cualquier terminal.")
+        else:
+            print("\n[+] Configuración local completada.")
+            print("[*] Puedes ejecutar la app usando tu entorno virtual local:")
+            print("    source venv/bin/activate")
+            print("    python thatch.py")
 
 if __name__ == "__main__":
     setup = ThatchSetup()

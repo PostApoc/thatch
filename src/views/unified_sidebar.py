@@ -57,6 +57,15 @@ class UnifiedSidebar(QFrame):
         self.btn_group.addButton(self.btn_runners)
         layout.addWidget(self.btn_runners)
         
+        # 5. Recipes Navigation Button
+        self.btn_recipes = QPushButton(_("sidebar_recipes"))
+        self.btn_recipes.setObjectName("SidebarBtn")
+        self.btn_recipes.setCheckable(True)
+        self.btn_recipes.setCursor(Qt.PointingHandCursor)
+        self.btn_recipes.clicked.connect(lambda: self._on_btn_clicked("recipes"))
+        self.btn_group.addButton(self.btn_recipes)
+        layout.addWidget(self.btn_recipes)
+        
         # Spacer to push preferences to the bottom
         layout.addStretch(1)
         
@@ -70,7 +79,7 @@ class UnifiedSidebar(QFrame):
         layout.addWidget(self.btn_prefs)
         
         # 6. Version indicator (Sleek minimalist footer)
-        self.lbl_version = QLabel("v1.0.0")
+        self.lbl_version = QLabel("v1.0.1")
         self.lbl_version.setStyleSheet("color: #48484a; font-size: 10px; font-weight: bold; margin-left: 16px; margin-top: 8px;")
         layout.addWidget(self.lbl_version)
 
@@ -88,6 +97,8 @@ class UnifiedSidebar(QFrame):
             self.btn_cargo.setChecked(True)
         elif view_name == "runners":
             self.btn_runners.setChecked(True)
+        elif view_name == "recipes":
+            self.btn_recipes.setChecked(True)
         elif view_name == "preferences":
             self.btn_prefs.setChecked(True)
         self.btn_group.blockSignals(False)
@@ -98,5 +109,6 @@ class UnifiedSidebar(QFrame):
         self.btn_chests.setText(_("sidebar_chests"))
         self.btn_cargo.setText(_("sidebar_cargo"))
         self.btn_runners.setText(_("sidebar_runners"))
+        self.btn_recipes.setText(_("sidebar_recipes"))
         self.btn_prefs.setText(_("sidebar_preferences"))
 

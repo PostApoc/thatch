@@ -2,6 +2,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                                QLineEdit, QComboBox, QScrollArea, QFrame, 
                                QGridLayout, QPushButton, QInputDialog, QMessageBox)
 from PySide6.QtCore import Signal, Slot, Qt
+from pathlib import Path
 
 class MapCard(QFrame):
     """
@@ -9,6 +10,7 @@ class MapCard(QFrame):
     their respective winetricks injection targets, and direct application hooks.
     """
     install_clicked = Signal(str, str) # Emits: display_name, recipe_id
+    delete_clicked = Signal(str, str) # Emits: display_name, recipe_id
 
     def __init__(self, recipe_id: str, recipe_data: dict, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -60,6 +62,13 @@ class MapCard(QFrame):
         self.btn_install.clicked.connect(lambda: self.install_clicked.emit(display_name, self.recipe_id))
         bottom.addWidget(self.btn_install)
         
+        self.btn_delete = QPushButton("🗑️")
+        self.btn_delete.setObjectName("RedBtn")
+        self.btn_delete.setCursor(Qt.PointingHandCursor)
+        self.btn_delete.setToolTip("Eliminar este mapa")
+        self.btn_delete.clicked.connect(lambda: self.delete_clicked.emit(display_name, self.recipe_id))
+        bottom.addWidget(self.btn_delete)
+        
         layout.addLayout(bottom)
 
 
@@ -69,6 +78,7 @@ class MapasView(QWidget):
     and lets the user selectively inject only the missing verbs.
     """
     install_requested = Signal(str, str, str) # display_name, recipe_id, target_prefix
+    map_deleted = Signal() # Emitted when a map is deleted to refresh data
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -172,6 +182,7 @@ class MapasView(QWidget):
         for recipe_id, recipe in filtered:
             card = MapCard(recipe_id, recipe, self)
             card.install_clicked.connect(self._on_install_clicked)
+            card.delete_clicked.connect(self._on_delete_clicked)
             self.grid_layout.addWidget(card, row, col)
             
             col += 1
@@ -202,6 +213,23 @@ class MapasView(QWidget):
         )
         if ok and item:
             self.install_requested.emit(app_name, recipe_id, item)
+
+    @Slot(str, str)
+    def _on_delete_clicked(self, app_name: str, recipe_id: str) -> None:
+        reply = QMessageBox.question(
+            self, "Confirmar Eliminación", 
+            f"¿Estás seguro de que quieres eliminar permanentemente el mapa '{app_name}'?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if reply == QMessageBox.Yes:
+            file_path = Path("config/recipes") / f"{recipe_id}.json"
+            try:
+                if file_path.exists():
+                    file_path.unlink()
+                QMessageBox.information(self, "Eliminado", "Mapa eliminado correctamente.")
+                self.map_deleted.emit()
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"No se pudo eliminar el mapa:\n{e}")
 
     @Slot()
     def _on_filters_changed(self) -> None:

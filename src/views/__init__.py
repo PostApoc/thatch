@@ -9,3 +9,4 @@ from .preferences_view import PreferencesView
 from .wine_runners_view import WineRunnersView
 from .create_chest_wizard import CreateChestWizard
 from .toast_notification import ToastNotification
+from .recipes_view import RecipesView
